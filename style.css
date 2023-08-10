@@ -5,16 +5,16 @@
 	border: 2px black solid;
 }
 
-#inputArea {
+#input_area {
 	margin-bottom: 20px;
 }
 
-#resourceLink {
+#txt_start_resource {
 	width: 60%;
 	padding: 5px;
 }
 
-#startButton {
+#btn_start {
 	padding: 5px 10px;
 	cursor: pointer;
 }
