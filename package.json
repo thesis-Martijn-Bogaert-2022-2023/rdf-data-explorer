@@ -12,6 +12,8 @@
     "vite": "^4.4.5"
   },
   "dependencies": {
+    "@comunica/query-sparql": "^2.8.2",
+    "validate-iri": "^1.0.1",
     "vis-network": "^9.1.6"
   }
 }

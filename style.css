@@ -4,3 +4,17 @@
 	margin: 20px auto;
 	border: 2px black solid;
 }
+
+#inputArea {
+	margin-bottom: 20px;
+}
+
+#resourceLink {
+	width: 60%;
+	padding: 5px;
+}
+
+#startButton {
+	padding: 5px 10px;
+	cursor: pointer;
+}

@@ -1,37 +1,16 @@
+import { initializeNetwork } from './network';
 import './style.css';
-import { DataSet, Network } from 'vis-network/standalone/esm/vis-network';
+import { iriIsValid } from './validation';
 
-const nodes = new DataSet();
-const edges = new DataSet();
+// (Re)draw network on start button press
+document.getElementById('btn_start').addEventListener('click', function () {
+	// Get entered value
+	const startingResource = document.getElementById('txt_start_resource').value;
 
-const data = {
-	nodes: nodes,
-	edges: edges,
-};
-
-const options = {
-	layout: {
-		hierarchical: {
-			direction: 'LR', // Left to right
-		},
-	},
-	edges: {
-		arrows: 'to',
-	},
-};
-
-const container = document.getElementById('network');
-const network = new Network(container, data, options);
-
-// Add nodes
-nodes.add([
-	{ id: 1, label: 'Node 1' },
-	{ id: 2, label: 'Node 2' },
-	{ id: 3, label: 'Node 3' },
-]);
-
-// Add edges
-edges.add([
-	{ from: 1, to: 2, label: 'Edge 1' },
-	{ from: 2, to: 3, label: 'Edge 2' },
-]);
+	// Initialize network only if given value is valid IRI
+	if (iriIsValid(startingResource)) {
+		initializeNetwork(startingResource);
+	} else {
+		alert('Enter a valid IRI!');
+	}
+});
