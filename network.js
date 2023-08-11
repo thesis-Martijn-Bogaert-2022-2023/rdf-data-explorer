@@ -34,7 +34,7 @@ export function initializeNetwork(startingResource) {
 				hierarchical: {
 					direction: 'LR', // Display tree from left to right
 					sortMethod: 'directed',
-					levelSeparation: 300,
+					levelSeparation: 500,
 				},
 			},
 			nodes: {
@@ -45,8 +45,15 @@ export function initializeNetwork(startingResource) {
 			},
 			edges: {
 				arrows: 'to', // Display edges as arrows
+				font: {
+					align: 'middle',
+				},
 				widthConstraint: {
 					maximum: 150, // Wrap label if too wide
+				},
+				smooth: {
+					type: 'vertical',
+					roundness: 1,
 				},
 			},
 		}
