@@ -13,6 +13,8 @@
   },
   "dependencies": {
     "@comunica/query-sparql": "^2.8.2",
+    "cytoscape": "^3.26.0",
+    "cytoscape-dagre": "^2.5.0",
     "validate-iri": "^1.0.1",
     "vis-network": "^9.1.6"
   }

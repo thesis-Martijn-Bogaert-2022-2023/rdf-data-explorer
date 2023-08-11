@@ -1,7 +1,7 @@
 import {
 	addPredicateAndObjectToNetwork,
 	initializeNetwork,
-	stabilizeNetwork,
+	renderNetwork,
 } from './network';
 import { fetchPredicatesAndObjects } from './querying';
 import './style.css';
@@ -21,11 +21,14 @@ document
 			return;
 		}
 
+		// Initialize and render network
 		const rootNode = initializeNetwork(startingResource);
+		renderNetwork();
 
+		// Fetch and display predicates and object of root resource
 		const results = await fetchPredicatesAndObjects(startingResource);
 		results.forEach((result) =>
 			addPredicateAndObjectToNetwork(rootNode, result.predicate, result.object)
 		);
-		stabilizeNetwork();
+		renderNetwork();
 	});
