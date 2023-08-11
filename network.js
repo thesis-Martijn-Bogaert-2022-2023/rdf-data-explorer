@@ -33,17 +33,43 @@ export function initializeNetwork(startingResource) {
 			layout: {
 				hierarchical: {
 					direction: 'LR', // Display tree from left to right
+					sortMethod: 'directed',
+					levelSeparation: 300,
 				},
 			},
 			nodes: {
 				shape: 'box',
 				widthConstraint: {
-					maximum: 150,
+					maximum: 150, // Wrap label if too wide
 				},
 			},
 			edges: {
 				arrows: 'to', // Display edges as arrows
+				widthConstraint: {
+					maximum: 150, // Wrap label if too wide
+				},
 			},
 		}
 	);
+
+	return rootNode;
+}
+
+export function addPredicateAndObjectToNetwork(subjectNode, predicate, object) {
+	const newNode = {
+		id: idCounter++,
+		label: object,
+	};
+	nodes.add(newNode);
+
+	const newEdge = {
+		from: subjectNode.id,
+		to: newNode.id,
+		label: predicate,
+	};
+	edges.add(newEdge);
+}
+
+export function stabilizeNetwork() {
+	network.stabilize();
 }
