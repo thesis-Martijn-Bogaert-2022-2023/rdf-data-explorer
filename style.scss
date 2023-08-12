@@ -1,0 +1,51 @@
+@use 'scss-reset/reset';
+
+:root {
+	--color-raisin-black: #272838;
+	--color-flax: #f3de8a;
+	--color-coral-pink: #eb9486;
+	--color-cool-gray: #7e7f9a;
+	--color-seasalt: #f9f8f8;
+
+	font-family: Arial, Helvetica, sans-serif;
+	color: var(--color-raisin-black);
+}
+
+html {
+	background-color: var(--color-raisin-black);
+}
+
+body {
+	width: 90%;
+	margin: 0 auto;
+	background-color: var(--color-coral-pink);
+	display: flex;
+	flex-direction: column;
+}
+
+.header {
+	padding: 1rem;
+	text-align: center;
+	h1 {
+		font-size: 3rem;
+	}
+	h2 {
+		font-size: 1.4rem;
+	}
+}
+
+.input_form {
+	padding: 1rem;
+	.input_row {
+		display: flex;
+
+		input {
+			flex-grow: 1;
+		}
+	}
+}
+
+#network {
+	flex-grow: 1;
+	background-color: var(--color-seasalt);
+}

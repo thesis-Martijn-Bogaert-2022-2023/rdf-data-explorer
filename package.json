@@ -9,13 +9,14 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "sass": "^1.65.1",
+    "scss-reset": "^1.4.2",
     "vite": "^4.4.5"
   },
   "dependencies": {
     "@comunica/query-sparql": "^2.8.2",
     "cytoscape": "^3.26.0",
     "cytoscape-dagre": "^2.5.0",
-    "validate-iri": "^1.0.1",
-    "vis-network": "^9.1.6"
+    "validate-iri": "^1.0.1"
   }
 }

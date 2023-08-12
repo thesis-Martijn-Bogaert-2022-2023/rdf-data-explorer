@@ -1,10 +1,10 @@
+import './style.scss';
 import {
 	addPredicateAndObjectToNetwork,
 	initializeNetwork,
 	renderNetwork,
 } from './network';
 import { fetchPredicatesAndObjects } from './querying';
-import './style.css';
 import { iriIsValid } from './validation';
 
 // (Re)draw network on start button press

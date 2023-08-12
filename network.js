@@ -1,5 +1,6 @@
 import cytoscape from 'cytoscape';
 import dagre from 'cytoscape-dagre';
+import { colorCoralPink, colorRaisingBlack, colorSeasalt } from './style';
 cytoscape.use(dagre);
 
 // Keep track of network and counter for node IDs
@@ -49,6 +50,10 @@ export function initializeNetwork(startingResource) {
 					'text-overflow-wrap': 'anywhere', // Allow text to wrap at any character
 					'text-valign': 'center', // Center text vertically
 					'text-halign': 'center', // Center text horizontally
+					color: colorRaisingBlack,
+					'border-color': colorRaisingBlack,
+					'border-width': '1px',
+					backgroundColor: colorCoralPink,
 				},
 			},
 			{
@@ -57,11 +62,16 @@ export function initializeNetwork(startingResource) {
 					'target-label': 'data(label)', // Show edge's label at end of edge
 					'curve-style': 'taxi', // Use only vertical and horizontal edges
 					'taxi-direction': 'rightward', // Start edge horizontally
-					'taxi-turn': '5%', // Take first turn at 5% of edge's length
+					'taxi-turn': '20px', // Take first turn after 20px
 					'text-max-width': '300px',
 					'text-wrap': 'wrap',
 					'text-overflow-wrap': 'anywhere', // Allow text to wrap at any character
 					'target-text-offset': 180, // Move text back from edge end
+					color: colorRaisingBlack,
+					'line-color': colorRaisingBlack,
+					'text-background-color': colorSeasalt,
+					'text-background-opacity': 0.8,
+					'text-background-padding': '10px',
 				},
 			},
 		],
