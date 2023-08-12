@@ -1,6 +1,11 @@
 import cytoscape from 'cytoscape';
 import dagre from 'cytoscape-dagre';
-import { colorCoralPink, colorRaisingBlack, colorSeasalt } from './style';
+import {
+	colorCoralPink,
+	colorFlax,
+	colorRaisingBlack,
+	colorSeasalt,
+} from './style';
 cytoscape.use(dagre);
 
 // Keep track of network and counter for node IDs
@@ -29,6 +34,7 @@ export function initializeNetwork(startingResource) {
 		data: {
 			id: idCounter++,
 			label: startingResource,
+			isResource: true,
 		},
 	};
 
@@ -53,7 +59,8 @@ export function initializeNetwork(startingResource) {
 					color: colorRaisingBlack,
 					'border-color': colorRaisingBlack,
 					'border-width': '1px',
-					backgroundColor: colorCoralPink,
+					'background-color': (ele) =>
+						ele.data('isResource') ? colorCoralPink : colorFlax, // Color resource nodes differently
 				},
 			},
 			{
@@ -81,10 +88,15 @@ export function initializeNetwork(startingResource) {
 	return rootNode;
 }
 
-export function addPredicateAndObjectToNetwork(subjectNode, predicate, object) {
+export function addPredicateAndObjectToNetwork(
+	subjectNode,
+	predicate,
+	object,
+	objectIsResource
+) {
 	const newNode = {
 		group: 'nodes',
-		data: { id: idCounter++, label: object },
+		data: { id: idCounter++, label: object, isResource: objectIsResource },
 	};
 
 	const newEdge = {

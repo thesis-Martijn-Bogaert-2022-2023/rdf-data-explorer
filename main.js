@@ -28,7 +28,12 @@ document
 		// Fetch and display predicates and object of root resource
 		const results = await fetchPredicatesAndObjects(startingResource);
 		results.forEach((result) =>
-			addPredicateAndObjectToNetwork(rootNode, result.predicate, result.object)
+			addPredicateAndObjectToNetwork(
+				rootNode,
+				result.predicate,
+				result.object,
+				result.objectIsResource
+			)
 		);
 		renderNetwork();
 	});

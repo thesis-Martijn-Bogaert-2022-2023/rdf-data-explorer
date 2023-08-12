@@ -31,7 +31,8 @@ export async function fetchPredicatesAndObjects(subjectResource) {
 		predicatesAndObjects = bindings.map((binding) => {
 			const predicate = binding.get('p').value;
 			const object = binding.get('o').value;
-			return { predicate: predicate, object: object };
+			const objectIsResource = binding.get('o').termType === 'NamedNode';
+			return { predicate, object, objectIsResource };
 		});
 
 		localStorage.setItem(
