@@ -11,9 +11,13 @@ import { fetchPredicatesAndObjects } from './querying';
 import { iriIsValid } from './validation';
 import { networkEvents } from './network';
 import { predeterminedDatasources } from './datasources';
+import LanguageList from 'language-list';
 
 // Get div to display tapped node information
 const nodeInfoDiv = document.getElementById('node_info');
+
+// Instantiate factory for language names
+const languageList = new LanguageList();
 
 // START BUTTON PRESSED
 document.getElementById('btn_start').addEventListener('click', function () {
@@ -64,7 +68,16 @@ networkEvents.on(
 				<datalist id="lst_filter">
 					<option value="${nodeLabel}">
 				</datalist>
-				<input type="text" id="txt_filter_lang">
+				<select id="slct_filter_lang">
+					${languageList
+						.getLanguageCodes()
+						.map(
+							(code) =>
+								`<option value="${code}">${languageList.getLanguageName(
+									code
+								)}</option>`
+						)}
+				</select>
 				<button id="btn_add_query">Add to Query</button>
 				<button id="btn_remove_query">Remove from Query</button>
 			</div>
@@ -119,7 +132,8 @@ networkEvents.on(
 			.getElementById('btn_add_query')
 			.addEventListener('click', function () {
 				const stringFilter = document.getElementById('txt_filter_string').value;
-				const languageFilter = document.getElementById('txt_filter_lang').value;
+				const languageFilter =
+					document.getElementById('slct_filter_lang').value;
 				addNodeToQuery(nodeId, stringFilter, languageFilter);
 			});
 

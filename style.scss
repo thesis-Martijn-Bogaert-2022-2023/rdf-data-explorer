@@ -76,6 +76,10 @@ main {
 		flex-grow: 1;
 	}
 
+	select {
+		padding: 0.5rem;
+	}
+
 	button {
 		cursor: pointer;
 		color: var(--color-raisin-black);
