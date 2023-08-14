@@ -1,5 +1,6 @@
 import cytoscape from 'cytoscape';
 import dagre from 'cytoscape-dagre';
+import { EventEmitter } from 'events';
 import {
 	colorCoralPink,
 	colorFlax,
@@ -7,6 +8,9 @@ import {
 	colorSeasalt,
 } from './style';
 cytoscape.use(dagre);
+
+// Allow events regarding the network to be handled elsewhere
+export const networkEvents = new EventEmitter();
 
 // Keep track of network and counter for node IDs
 let network, idCounter;
@@ -85,9 +89,6 @@ export function initializeNetwork(startingResource) {
 		elements: [rootNode],
 	});
 
-	// Get div to display tapped node information
-	const nodeInfoDiv = document.getElementById('node_info');
-
 	// Add tap event listener to network
 	network.on('tap', function (evt) {
 		// Get target that was tapped
@@ -95,37 +96,14 @@ export function initializeNetwork(startingResource) {
 		if (!tapTarget) return;
 
 		// Hide node info in case no node was tapped
-		if (tapTarget === network || !tapTarget.isNode()) {
-			nodeInfoDiv.style.display = 'none';
-			return;
+		if (tapTarget !== network && tapTarget.isNode()) {
+			// Get node's properties
+			const label = tapTarget.data('label');
+			const isResource = tapTarget.data('isResource');
+			networkEvents.emit('nodeSelected', label, isResource);
+		} else {
+			networkEvents.emit('nodeUnselected');
 		}
-
-		// Get node's properties
-		const label = tapTarget.data('label');
-		const isResource = tapTarget.data('isResource');
-
-		// Keep track of html elements to render
-		const htmlElements = [];
-
-		// Add title
-		htmlElements.push(`<h2>${label}</h2>`);
-
-		// Add input for fetching predicates and objects
-		if (isResource) {
-			htmlElements.push(`
-				<div class="input_form">
-					<div class="input_row">
-						<label for="txt_datasource">Datasource:</label>
-						<input type="text" id="txt_datasource">
-						<button id="btn_start">Expand</button>
-					</div>
-				</div>
-			`);
-		}
-
-		// Show div displaying node info
-		nodeInfoDiv.innerHTML = htmlElements.join('\n');
-		nodeInfoDiv.style.display = 'block';
 	});
 
 	return rootNode;
