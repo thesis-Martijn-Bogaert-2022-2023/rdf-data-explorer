@@ -98,9 +98,10 @@ export function initializeNetwork(startingResource) {
 		// Hide node info in case no node was tapped
 		if (tapTarget !== network && tapTarget.isNode()) {
 			// Get node's properties
-			const label = tapTarget.data('label');
+			const nodeId = tapTarget.data('id');
+			const nodeLabel = tapTarget.data('label');
 			const isResource = tapTarget.data('isResource');
-			networkEvents.emit('nodeSelected', label, isResource);
+			networkEvents.emit('nodeSelected', nodeId, nodeLabel, isResource);
 		} else {
 			networkEvents.emit('nodeUnselected');
 		}
@@ -110,7 +111,7 @@ export function initializeNetwork(startingResource) {
 }
 
 export function addPredicateAndObjectToNetwork(
-	subjectNode,
+	subjectNodeId,
 	predicate,
 	object,
 	objectIsResource
@@ -123,7 +124,7 @@ export function addPredicateAndObjectToNetwork(
 	const newEdge = {
 		group: 'edges',
 		data: {
-			source: subjectNode.data.id,
+			source: subjectNodeId,
 			target: newNode.data.id,
 			label: predicate,
 		},

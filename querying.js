@@ -16,7 +16,7 @@ export async function fetchPredicatesAndObjects(subjectResource) {
 	let predicatesAndObjects;
 
 	// TEMP: use local storage to not overload Stad Gent server
-	const saved = localStorage.getItem('temp_query_results');
+	const saved = localStorage.getItem(subjectResource);
 	if (saved) {
 		console.log('Use local storage!');
 		predicatesAndObjects = JSON.parse(saved);
@@ -35,10 +35,7 @@ export async function fetchPredicatesAndObjects(subjectResource) {
 			return { predicate, object, objectIsResource };
 		});
 
-		localStorage.setItem(
-			'temp_query_results',
-			JSON.stringify(predicatesAndObjects)
-		);
+		localStorage.setItem(subjectResource, JSON.stringify(predicatesAndObjects));
 	}
 
 	return predicatesAndObjects;

@@ -12,43 +12,28 @@ import { networkEvents } from './network';
 const nodeInfoDiv = document.getElementById('node_info');
 
 // START BUTTON PRESSED
-document
-	.getElementById('btn_start')
-	.addEventListener('click', async function () {
-		// Get entered starting resource value
-		const startingResource =
-			document.getElementById('txt_start_resource').value;
+document.getElementById('btn_start').addEventListener('click', function () {
+	// Get entered starting resource value
+	const startingResource = document.getElementById('txt_start_resource').value;
 
-		// Only move on if entered value is valid IRI
-		if (!startingResource || !iriIsValid(startingResource)) {
-			alert('Enter a valid IRI!');
-			return;
-		}
+	// Only move on if entered value is valid IRI
+	if (!startingResource || !iriIsValid(startingResource)) {
+		alert('Enter a valid IRI!');
+		return;
+	}
 
-		// Initialize and render network
-		const rootNode = initializeNetwork(startingResource);
-		renderNetwork();
-
-		// Fetch and display predicates and object of root resource
-		const results = await fetchPredicatesAndObjects(startingResource);
-		results.forEach((result) =>
-			addPredicateAndObjectToNetwork(
-				rootNode,
-				result.predicate,
-				result.object,
-				result.objectIsResource
-			)
-		);
-		renderNetwork();
-	});
+	// Initialize and render network
+	initializeNetwork(startingResource);
+	renderNetwork();
+});
 
 // NODE SELECTED
-networkEvents.on('nodeSelected', (label, isResource) => {
+networkEvents.on('nodeSelected', (nodeId, nodeLabel, isResource) => {
 	// Keep track of HTML elements to render in node information div
 	const htmlElements = [];
 
 	// Add title
-	htmlElements.push(`<h2>${label}</h2>`);
+	htmlElements.push(`<h2>${nodeLabel}</h2>`);
 
 	// Add input for fetching predicates and objects
 	if (isResource) {
@@ -65,6 +50,32 @@ networkEvents.on('nodeSelected', (label, isResource) => {
 
 	// Set div's inner HTML
 	nodeInfoDiv.innerHTML = htmlElements.join('\n');
+
+	if (isResource) {
+		// EXPAND BUTTON PRESSSED
+		document
+			.getElementById('btn_expand')
+			.addEventListener('click', async function () {
+				// Check if given datasource is valid
+				// const datasource = document.getElementById('txt_datasource').value;
+				// if (!datasource || !iriIsValid(datasource)) {
+				// 	alert('Enter a valid datasource!');
+				// 	return;
+				// }
+
+				// Fetch and display predicates and object of node's resource
+				const results = await fetchPredicatesAndObjects(nodeLabel);
+				results.forEach((result) =>
+					addPredicateAndObjectToNetwork(
+						nodeId,
+						result.predicate,
+						result.object,
+						result.objectIsResource
+					)
+				);
+				renderNetwork();
+			});
+	}
 
 	// Show div displaying node info
 	nodeInfoDiv.style.display = 'block';
