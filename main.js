@@ -1,7 +1,9 @@
 import './style.scss';
 import {
+	addNodeToQuery,
 	addPredicateAndObjectToNetwork,
 	initializeNetwork,
+	removeNodeFromQuery,
 	removeNodesAndEdges,
 	renderNetwork,
 } from './network';
@@ -42,20 +44,31 @@ networkEvents.on(
 		// Add input for fetching predicates and objects
 		if (isResource) {
 			htmlElements.push(`
-				<div class="input_form">
-					<div class="input_row">
-						<label for="txt_datasource">Datasource:</label>
-						<input type="text" id="txt_datasource" list="lst_datasource">
-						<datalist id="lst_datasource">
-							${[...predeterminedDatasources]
-								.map((datasource) => `<option value="${datasource}">`)
-								.join('\n')}
-						</datalist>
-						<button id="btn_expand">Expand</button>
-					</div>
+				<div class="input_row">
+					<label for="txt_datasource">Datasource:</label>
+					<input type="text" id="txt_datasource" list="lst_datasource">
+					<datalist id="lst_datasource">
+						${[...predeterminedDatasources]
+							.map((datasource) => `<option value="${datasource}">`)
+							.join('\n')}
+					</datalist>
+					<button id="btn_expand">Expand</button>
 				</div>
 			`);
 		}
+
+		htmlElements.push(`
+			<div class="input_row">
+				<label for="txt_filter_string">Filter (not required):</label>
+				<input type="text" id="txt_filter_string" list="lst_filter">
+				<datalist id="lst_filter">
+					<option value="${nodeLabel}">
+				</datalist>
+				<input type="text" id="txt_filter_lang">
+				<button id="btn_add_query">Add to Query</button>
+				<button id="btn_remove_query">Remove from Query</button>
+			</div>
+		`);
 
 		// Set div's inner HTML
 		nodeInfoDiv.innerHTML = htmlElements.join('\n');
@@ -100,6 +113,22 @@ networkEvents.on(
 					renderNetwork();
 				});
 		}
+
+		// ADD TO QUERY BUTTON PRESSED
+		document
+			.getElementById('btn_add_query')
+			.addEventListener('click', function () {
+				const stringFilter = document.getElementById('txt_filter_string').value;
+				const languageFilter = document.getElementById('txt_filter_lang').value;
+				addNodeToQuery(nodeId, stringFilter, languageFilter);
+			});
+
+		// REMOVE FROM QUERY BUTTON PRESSED
+		document
+			.getElementById('btn_remove_query')
+			.addEventListener('click', function () {
+				removeNodeFromQuery(nodeId);
+			});
 
 		// Show div displaying node info
 		nodeInfoDiv.style.display = 'block';

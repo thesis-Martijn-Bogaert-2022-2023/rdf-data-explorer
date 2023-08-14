@@ -150,3 +150,19 @@ export function renderNetwork() {
 export function removeNodesAndEdges(nodes) {
 	network.remove(nodes);
 }
+
+export function addNodeToQuery(nodeId, stringFilter, languageFilter) {
+	const node = network.getElementById(nodeId);
+	node.data('addedToQuery', true);
+	node.data('stringFilter', stringFilter);
+	node.data('languageFilter', languageFilter);
+	console.log('Data updated', node.data());
+}
+
+export function removeNodeFromQuery(nodeId) {
+	const node = network.getElementById(nodeId);
+	node.data('addedToQuery', false);
+	node.removeData('stringFilter');
+	node.removeData('languageFilter');
+	console.log('Data removed', node.data());
+}
