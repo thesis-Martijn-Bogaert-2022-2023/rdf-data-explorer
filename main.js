@@ -44,7 +44,11 @@ networkEvents.on(
 				<div class="input_form">
 					<div class="input_row">
 						<label for="txt_datasource">Datasource:</label>
-						<input type="text" id="txt_datasource">
+						<input type="text" id="txt_datasource" list="lst_datasource">
+						<datalist id="lst_datasource">
+							<option value="https://stad.gent/sparql">
+							<option value="https://query.wikidata.org/sparql">
+						</datalist>
 						<button id="btn_expand">Expand</button>
 					</div>
 				</div>
@@ -60,14 +64,17 @@ networkEvents.on(
 				.getElementById('btn_expand')
 				.addEventListener('click', async function () {
 					// Check if given datasource is valid
-					// const datasource = document.getElementById('txt_datasource').value;
-					// if (!datasource || !iriIsValid(datasource)) {
-					// 	alert('Enter a valid datasource!');
-					// 	return;
-					// }
+					const datasource = document.getElementById('txt_datasource').value;
+					if (!datasource || !iriIsValid(datasource)) {
+						alert('Enter a valid datasource!');
+						return;
+					}
 
 					// Fetch predicates and object of node's resource
-					const results = await fetchPredicatesAndObjects(nodeLabel);
+					const results = await fetchPredicatesAndObjects(
+						nodeLabel,
+						datasource
+					);
 
 					// Remove node's successors (nodes and edges) in case they already existed
 					if (successingNodes.length > 0) {

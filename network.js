@@ -148,7 +148,5 @@ export function renderNetwork() {
 }
 
 export function removeNodesAndEdges(nodes) {
-	console.log('Removing ', nodes);
 	network.remove(nodes);
-	console.log('Removed!');
 }

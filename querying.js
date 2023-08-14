@@ -12,11 +12,11 @@ WHERE {
 `;
 }
 
-export async function fetchPredicatesAndObjects(subjectResource) {
+export async function fetchPredicatesAndObjects(subjectResource, datasource) {
 	let predicatesAndObjects;
 
 	// TEMP: use local storage to not overload Stad Gent server
-	const saved = localStorage.getItem(subjectResource);
+	const saved = localStorage.getItem(subjectResource + datasource);
 	if (saved) {
 		console.log('Use local storage!');
 		predicatesAndObjects = JSON.parse(saved);
@@ -25,7 +25,7 @@ export async function fetchPredicatesAndObjects(subjectResource) {
 
 		const query = buildQuery(subjectResource);
 		const bindingsStream = await queryEngine.queryBindings(query, {
-			sources: ['https://stad.gent/sparql'],
+			sources: [datasource],
 		});
 		const bindings = await bindingsStream.toArray();
 		predicatesAndObjects = bindings.map((binding) => {
@@ -35,7 +35,10 @@ export async function fetchPredicatesAndObjects(subjectResource) {
 			return { predicate, object, objectIsResource };
 		});
 
-		localStorage.setItem(subjectResource, JSON.stringify(predicatesAndObjects));
+		localStorage.setItem(
+			subjectResource + datasource,
+			JSON.stringify(predicatesAndObjects)
+		);
 	}
 
 	return predicatesAndObjects;
