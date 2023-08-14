@@ -8,7 +8,7 @@ import {
 import { fetchPredicatesAndObjects } from './querying';
 import { iriIsValid } from './validation';
 import { networkEvents } from './network';
-import { datasources } from './datasources';
+import { predeterminedDatasources } from './datasources';
 
 // Get div to display tapped node information
 const nodeInfoDiv = document.getElementById('node_info');
@@ -47,7 +47,9 @@ networkEvents.on(
 						<label for="txt_datasource">Datasource:</label>
 						<input type="text" id="txt_datasource" list="lst_datasource">
 						<datalist id="lst_datasource">
-							${datasources.map((datasource) => `<option value="${datasource}">`).join('\n')}
+							${[...predeterminedDatasources]
+								.map((datasource) => `<option value="${datasource}">`)
+								.join('\n')}
 						</datalist>
 						<button id="btn_expand">Expand</button>
 					</div>
@@ -69,6 +71,9 @@ networkEvents.on(
 						alert('Enter a valid datasource!');
 						return;
 					}
+
+					// Add datasource to predetermined datasources for future use
+					predeterminedDatasources.add(datasource);
 
 					// Fetch predicates and object of node's resource
 					const results = await fetchPredicatesAndObjects(
