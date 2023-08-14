@@ -85,6 +85,49 @@ export function initializeNetwork(startingResource) {
 		elements: [rootNode],
 	});
 
+	// Get div to display tapped node information
+	const nodeInfoDiv = document.getElementById('node_info');
+
+	// Add tap event listener to network
+	network.on('tap', function (evt) {
+		// Get target that was tapped
+		const tapTarget = evt.target;
+		if (!tapTarget) return;
+
+		// Hide node info in case no node was tapped
+		if (tapTarget === network || !tapTarget.isNode()) {
+			nodeInfoDiv.style.display = 'none';
+			return;
+		}
+
+		// Get node's properties
+		const label = tapTarget.data('label');
+		const isResource = tapTarget.data('isResource');
+
+		// Keep track of html elements to render
+		const htmlElements = [];
+
+		// Add title
+		htmlElements.push(`<h2>${label}</h2>`);
+
+		// Add input for fetching predicates and objects
+		if (isResource) {
+			htmlElements.push(`
+				<div class="input_form">
+					<div class="input_row">
+						<label for="txt_datasource">Datasource:</label>
+						<input type="text" id="txt_datasource">
+						<button id="btn_start">Expand</button>
+					</div>
+				</div>
+			`);
+		}
+
+		// Show div displaying node info
+		nodeInfoDiv.innerHTML = htmlElements.join('\n');
+		nodeInfoDiv.style.display = 'block';
+	});
+
 	return rootNode;
 }
 

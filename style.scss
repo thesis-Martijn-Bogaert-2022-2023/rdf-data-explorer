@@ -18,19 +18,48 @@ html {
 body {
 	width: 90%;
 	margin: 0 auto;
-	background-color: var(--color-coral-pink);
+	min-height: 100vh;
 	display: flex;
 	flex-direction: column;
-}
+	background-color: var(--color-coral-pink);
 
-.header {
-	padding: 1rem;
-	text-align: center;
 	h1 {
 		font-size: 3rem;
+		font-weight: bold;
 	}
 	h2 {
 		font-size: 1.4rem;
+		font-weight: bold;
+	}
+}
+
+main {
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+
+	.header {
+		padding: 1rem;
+		text-align: center;
+	}
+
+	#network {
+		flex-grow: 1;
+		background-color: var(--color-seasalt);
+	}
+}
+
+#node_info {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	color: var(--color-seasalt);
+	background-color: var(--color-cool-gray);
+
+	h2 {
+		padding: 1rem;
 	}
 }
 
@@ -38,14 +67,21 @@ body {
 	padding: 1rem;
 	.input_row {
 		display: flex;
+		gap: 10px;
+
+		label {
+			padding: 0.5rem;
+		}
 
 		input {
 			flex-grow: 1;
 		}
-	}
-}
 
-#network {
-	flex-grow: 1;
-	background-color: var(--color-seasalt);
+		button {
+			cursor: pointer;
+			color: var(--color-raisin-black);
+			background-color: var(--color-flax);
+			padding: 0.5rem;
+		}
+	}
 }
