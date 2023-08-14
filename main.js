@@ -8,6 +8,7 @@ import {
 import { fetchPredicatesAndObjects } from './querying';
 import { iriIsValid } from './validation';
 import { networkEvents } from './network';
+import { datasources } from './datasources';
 
 // Get div to display tapped node information
 const nodeInfoDiv = document.getElementById('node_info');
@@ -46,8 +47,7 @@ networkEvents.on(
 						<label for="txt_datasource">Datasource:</label>
 						<input type="text" id="txt_datasource" list="lst_datasource">
 						<datalist id="lst_datasource">
-							<option value="https://stad.gent/sparql">
-							<option value="https://query.wikidata.org/sparql">
+							${datasources.map((datasource) => `<option value="${datasource}">`).join('\n')}
 						</datalist>
 						<button id="btn_expand">Expand</button>
 					</div>
