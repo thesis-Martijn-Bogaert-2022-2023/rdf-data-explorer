@@ -95,19 +95,29 @@ export function initializeNetwork(startingResource) {
 		const tapTarget = evt.target;
 		if (!tapTarget) return;
 
-		// Hide node info in case no node was tapped
+		// Check whether tap target isn't outside network element and is also node
 		if (tapTarget !== network && tapTarget.isNode()) {
 			// Get node's properties
 			const nodeId = tapTarget.data('id');
 			const nodeLabel = tapTarget.data('label');
 			const isResource = tapTarget.data('isResource');
-			networkEvents.emit('nodeSelected', nodeId, nodeLabel, isResource);
+
+			// Get IDs of node's successing nodes
+			const successingNodes = tapTarget.successors().nodes();
+
+			// Let UI handler know node was selected
+			networkEvents.emit(
+				'nodeSelected',
+				nodeId,
+				nodeLabel,
+				isResource,
+				successingNodes
+			);
 		} else {
+			// Let UI handler know node was unselected
 			networkEvents.emit('nodeUnselected');
 		}
 	});
-
-	return rootNode;
 }
 
 export function addPredicateAndObjectToNetwork(
@@ -135,4 +145,10 @@ export function addPredicateAndObjectToNetwork(
 
 export function renderNetwork() {
 	network.layout(layoutOptions).run();
+}
+
+export function removeNodesAndEdges(nodes) {
+	console.log('Removing ', nodes);
+	network.remove(nodes);
+	console.log('Removed!');
 }

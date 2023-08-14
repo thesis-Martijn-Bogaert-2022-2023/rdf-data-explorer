@@ -2,6 +2,7 @@ import './style.scss';
 import {
 	addPredicateAndObjectToNetwork,
 	initializeNetwork,
+	removeNodesAndEdges,
 	renderNetwork,
 } from './network';
 import { fetchPredicatesAndObjects } from './querying';
@@ -28,16 +29,18 @@ document.getElementById('btn_start').addEventListener('click', function () {
 });
 
 // NODE SELECTED
-networkEvents.on('nodeSelected', (nodeId, nodeLabel, isResource) => {
-	// Keep track of HTML elements to render in node information div
-	const htmlElements = [];
+networkEvents.on(
+	'nodeSelected',
+	(nodeId, nodeLabel, isResource, successingNodes) => {
+		// Keep track of HTML elements to render in node information div
+		const htmlElements = [];
 
-	// Add title
-	htmlElements.push(`<h2>${nodeLabel}</h2>`);
+		// Add title
+		htmlElements.push(`<h2>${nodeLabel}</h2>`);
 
-	// Add input for fetching predicates and objects
-	if (isResource) {
-		htmlElements.push(`
+		// Add input for fetching predicates and objects
+		if (isResource) {
+			htmlElements.push(`
 				<div class="input_form">
 					<div class="input_row">
 						<label for="txt_datasource">Datasource:</label>
@@ -46,40 +49,50 @@ networkEvents.on('nodeSelected', (nodeId, nodeLabel, isResource) => {
 					</div>
 				</div>
 			`);
+		}
+
+		// Set div's inner HTML
+		nodeInfoDiv.innerHTML = htmlElements.join('\n');
+
+		if (isResource) {
+			// EXPAND BUTTON PRESSSED
+			document
+				.getElementById('btn_expand')
+				.addEventListener('click', async function () {
+					// Check if given datasource is valid
+					// const datasource = document.getElementById('txt_datasource').value;
+					// if (!datasource || !iriIsValid(datasource)) {
+					// 	alert('Enter a valid datasource!');
+					// 	return;
+					// }
+
+					// Fetch predicates and object of node's resource
+					const results = await fetchPredicatesAndObjects(nodeLabel);
+
+					// Remove node's successors (nodes and edges) in case they already existed
+					if (successingNodes.length > 0) {
+						removeNodesAndEdges(successingNodes);
+					}
+
+					// Add predicates and objects to network
+					results.forEach((result) =>
+						addPredicateAndObjectToNetwork(
+							nodeId,
+							result.predicate,
+							result.object,
+							result.objectIsResource
+						)
+					);
+
+					// Rerender network
+					renderNetwork();
+				});
+		}
+
+		// Show div displaying node info
+		nodeInfoDiv.style.display = 'block';
 	}
-
-	// Set div's inner HTML
-	nodeInfoDiv.innerHTML = htmlElements.join('\n');
-
-	if (isResource) {
-		// EXPAND BUTTON PRESSSED
-		document
-			.getElementById('btn_expand')
-			.addEventListener('click', async function () {
-				// Check if given datasource is valid
-				// const datasource = document.getElementById('txt_datasource').value;
-				// if (!datasource || !iriIsValid(datasource)) {
-				// 	alert('Enter a valid datasource!');
-				// 	return;
-				// }
-
-				// Fetch and display predicates and object of node's resource
-				const results = await fetchPredicatesAndObjects(nodeLabel);
-				results.forEach((result) =>
-					addPredicateAndObjectToNetwork(
-						nodeId,
-						result.predicate,
-						result.object,
-						result.objectIsResource
-					)
-				);
-				renderNetwork();
-			});
-	}
-
-	// Show div displaying node info
-	nodeInfoDiv.style.display = 'block';
-});
+);
 
 // NODE UNSELECTED
 networkEvents.on('nodeUnselected', () => {
