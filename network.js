@@ -111,6 +111,7 @@ export function initializeNetwork(startingResource) {
 			const propertyName = tapTarget.data('propertyName');
 			const isOptional = tapTarget.data('isOptional');
 			const isRoot = tapTarget.data('isRoot');
+			const datasource = tapTarget.data('datasource');
 
 			// Get IDs of node's successing nodes
 			const successingNodes = tapTarget.successors().nodes();
@@ -127,6 +128,7 @@ export function initializeNetwork(startingResource) {
 				propertyName,
 				isOptional,
 				isRoot,
+				datasource,
 				successingNodes
 			);
 		} else {
@@ -259,4 +261,11 @@ export function getPropertiesWithPredicateSequences() {
 	});
 
 	return properties;
+}
+
+export function storeDatasource(nodeId, datasource) {
+	if (!network) return;
+
+	const node = network.getElementById(nodeId);
+	node.data('datasource', datasource);
 }

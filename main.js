@@ -7,6 +7,7 @@ import {
 	removeNodesAndEdges,
 	renderNetwork,
 	addFilters,
+	storeDatasource,
 } from './network';
 import { fetchPredicatesAndObjects } from './querying';
 import { iriIsValid } from './validation';
@@ -49,6 +50,7 @@ networkEvents.on(
 		propertyName,
 		isOptional,
 		isRoot,
+		datasource,
 		successingNodes
 	) => {
 		// Keep track of HTML elements to render in node information div
@@ -62,7 +64,9 @@ networkEvents.on(
 			htmlElements.push(`
 				<div class="input_row">
 					<label for="txt_datasource">Datasource:</label>
-					<input type="text" id="txt_datasource" list="lst_datasource">
+					<input type="text" id="txt_datasource" value="${
+						datasource ?? ''
+					}" list="lst_datasource">
 					<datalist id="lst_datasource">
 						${[...predeterminedDatasources]
 							.map((datasource) => `<option value="${datasource}">`)
@@ -163,6 +167,9 @@ networkEvents.on(
 
 					// Rerender network
 					renderNetwork();
+
+					// Store datasource
+					storeDatasource(nodeId, datasource);
 				});
 		}
 
