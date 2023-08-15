@@ -255,6 +255,7 @@ export function getPropertiesWithPredicateSequences() {
 
 		// Use property name as key (make sure key is valid)
 		let propertyName = selectedNode.data('propertyName');
+		propertyName = propertyName.trim();
 		propertyName = propertyName.replace(/[^a-zA-Z0-9 ]/g, '');
 		propertyName = propertyName.replace(/\s+/g, '_');
 		properties[propertyName] = property;
