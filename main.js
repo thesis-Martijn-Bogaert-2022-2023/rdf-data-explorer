@@ -77,8 +77,8 @@ networkEvents.on(
 				<datalist id="lst_filter">
 					<option value="${nodeLabel}">
 				</datalist>
-				<select id="slct_filter_lang">
-					<option value ${languageFilter ? 'selected' : ''}></option>
+				<select id="slct_filter_lang" placeholder="Language">
+					<option value ${languageFilter ? 'selected' : ''}>Any language</option>
 					${languageList
 						.getLanguageCodes()
 						.map(

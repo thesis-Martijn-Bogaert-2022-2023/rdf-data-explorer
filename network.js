@@ -2,6 +2,7 @@ import cytoscape from 'cytoscape';
 import dagre from 'cytoscape-dagre';
 import { EventEmitter } from 'events';
 import {
+	colorCoolGray,
 	colorCoralPink,
 	colorFlax,
 	colorRaisingBlack,
@@ -60,9 +61,11 @@ export function initializeNetwork(startingResource) {
 					'text-overflow-wrap': 'anywhere', // Allow text to wrap at any character
 					'text-valign': 'center', // Center text vertically
 					'text-halign': 'center', // Center text horizontally
+					'font-weight': (ele) =>
+						ele.data('addedToQuery') ? 'bold' : 'normal',
 					color: colorRaisingBlack,
 					'border-color': colorRaisingBlack,
-					'border-width': '1px',
+					'border-width': (ele) => (ele.data('addedToQuery') ? '5px' : '1px'),
 					'background-color': (ele) =>
 						ele.data('isResource') ? colorCoralPink : colorFlax, // Color resource nodes differently
 				},
@@ -160,11 +163,9 @@ export function addNodeToQuery(nodeId, stringFilter, languageFilter) {
 	node.data('addedToQuery', true);
 	node.data('stringFilter', stringFilter);
 	node.data('languageFilter', languageFilter);
-	console.log('Data updated', node.data());
 }
 
 export function removeNodeFromQuery(nodeId) {
 	const node = network.getElementById(nodeId);
 	node.data('addedToQuery', false);
-	console.log('Removed from query', node.data());
 }
