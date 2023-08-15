@@ -1,12 +1,12 @@
 import './style.scss';
 import {
-	addNodeToQuery,
+	toggleNodeAddedToQuery,
 	addPredicateAndObjectToNetwork,
 	getPropertiesWithPredicateSequences,
 	initializeNetwork,
-	removeNodeFromQuery,
 	removeNodesAndEdges,
 	renderNetwork,
+	addFilters,
 } from './network';
 import { fetchPredicatesAndObjects } from './querying';
 import { iriIsValid } from './validation';
@@ -45,6 +45,8 @@ networkEvents.on(
 		isResource,
 		stringFilter,
 		languageFilter,
+		addedToQuery,
+		propertyName,
 		successingNodes
 	) => {
 		// Keep track of HTML elements to render in node information div
@@ -53,7 +55,7 @@ networkEvents.on(
 		// Add title
 		htmlElements.push(`<h2>${nodeLabel}</h2>`);
 
-		// Add input for fetching predicates and objects
+		// Add input row for fetching predicates and objects
 		if (isResource) {
 			htmlElements.push(`
 				<div class="input_row">
@@ -69,6 +71,21 @@ networkEvents.on(
 			`);
 		}
 
+		// Add input row for adding to query
+		htmlElements.push(`
+			<div class="input_row">
+				<label for="txt_property">Property Name:</label>
+				<input type="text" id="txt_property" value="${propertyName ?? ''}">
+				<button ${
+					addedToQuery ? 'disabled' : ''
+				} id="btn_add_query">Add to Query</button>
+				<button ${
+					addedToQuery ? '' : 'disabled'
+				} id="btn_remove_query">Remove from Query</button>
+			</div>
+		`);
+
+		// Add input row for filtering
 		htmlElements.push(`
 			<div class="input_row">
 				<label for="txt_filter_string">Filter (not required):</label>
@@ -79,7 +96,7 @@ networkEvents.on(
 					<option value="${nodeLabel}">
 				</datalist>
 				<select id="slct_filter_lang" placeholder="Language">
-					<option value ${languageFilter ? 'selected' : ''}>Any language</option>
+					<option value ${languageFilter ? 'selected' : ''}>Any Language</option>
 					${languageList
 						.getLanguageCodes()
 						.map(
@@ -89,8 +106,7 @@ networkEvents.on(
 								}>${languageList.getLanguageName(code)}</option>`
 						)}
 				</select>
-				<button id="btn_add_query">Add to Query</button>
-				<button id="btn_remove_query">Remove from Query</button>
+				<button id="btn_filters_save">Save</button>
 			</div>
 		`);
 
@@ -138,21 +154,45 @@ networkEvents.on(
 				});
 		}
 
+		// Get add and remove query buttons
+		const btnAddQuery = document.getElementById('btn_add_query');
+		const btnRemoveQuery = document.getElementById('btn_remove_query');
+
 		// ADD TO QUERY BUTTON PRESSED
+		btnAddQuery.addEventListener('click', function () {
+			// Get entered property name
+			const propertyName = document.getElementById('txt_property').value;
+
+			// Make sure property name is given
+			if (!propertyName) {
+				alert('Enter a property name!');
+				return;
+			}
+
+			toggleNodeAddedToQuery(nodeId, propertyName);
+
+			// Enable and disable correct query buttons
+			btnAddQuery.disabled = true;
+			btnRemoveQuery.disabled = false;
+		});
+
+		// REMOVE FROM QUERY BUTTON PRESSED
+		btnRemoveQuery.addEventListener('click', function () {
+			toggleNodeAddedToQuery(nodeId);
+
+			// Enable and disable correct query buttons
+			btnAddQuery.disabled = false;
+			btnRemoveQuery.disabled = true;
+		});
+
+		// SAVE FILTERS BUTTON PRESSSED
 		document
-			.getElementById('btn_add_query')
+			.getElementById('btn_filters_save')
 			.addEventListener('click', function () {
 				const stringFilter = document.getElementById('txt_filter_string').value;
 				const languageFilter =
 					document.getElementById('slct_filter_lang').value;
-				addNodeToQuery(nodeId, stringFilter, languageFilter);
-			});
-
-		// REMOVE FROM QUERY BUTTON PRESSED
-		document
-			.getElementById('btn_remove_query')
-			.addEventListener('click', function () {
-				removeNodeFromQuery(nodeId);
+				addFilters(nodeId, stringFilter, languageFilter);
 			});
 
 		// Show div displaying node info

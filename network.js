@@ -106,6 +106,8 @@ export function initializeNetwork(startingResource) {
 			const isResource = tapTarget.data('isResource');
 			const stringFilter = tapTarget.data('stringFilter');
 			const languageFilter = tapTarget.data('languageFilter');
+			const addedToQuery = tapTarget.data('addedToQuery');
+			const propertyName = tapTarget.data('propertyName');
 
 			// Get IDs of node's successing nodes
 			const successingNodes = tapTarget.successors().nodes();
@@ -118,6 +120,8 @@ export function initializeNetwork(startingResource) {
 				isResource,
 				stringFilter,
 				languageFilter,
+				addedToQuery,
+				propertyName,
 				successingNodes
 			);
 		} else {
@@ -164,20 +168,29 @@ export function removeNodesAndEdges(nodes) {
 	network.remove(nodes);
 }
 
-export function addNodeToQuery(nodeId, stringFilter, languageFilter) {
+export function toggleNodeAddedToQuery(nodeId, propertyName) {
 	if (!network) return;
 
 	const node = network.getElementById(nodeId);
-	node.data('addedToQuery', true);
-	node.data('stringFilter', stringFilter);
-	node.data('languageFilter', languageFilter);
+
+	// Toggle node's addedToQuery
+	const currentValue = node.data('addedToQuery');
+	const newValue = !currentValue;
+	node.data('addedToQuery', newValue);
+
+	// Save given property name
+	if (newValue) {
+		node.data('propertyName', propertyName);
+	}
 }
 
-export function removeNodeFromQuery(nodeId) {
+export function addFilters(nodeId, stringFilter, languageFilter, isOptional) {
 	if (!network) return;
 
 	const node = network.getElementById(nodeId);
-	node.data('addedToQuery', false);
+	node.data('stringFilter', stringFilter);
+	node.data('languageFilter', languageFilter);
+	node.data('isOptional', isOptional);
 }
 
 export function getPropertiesWithPredicateSequences() {
@@ -229,7 +242,11 @@ export function getPropertiesWithPredicateSequences() {
 			property['filters'] = filters;
 		}
 
-		properties[selectedNode.data('label')] = property;
+		// Use property name as key (make sure key is valid)
+		let propertyName = selectedNode.data('propertyName');
+		propertyName = propertyName.replace(/[^a-zA-Z0-9 ]/g, '');
+		propertyName = propertyName.replace(/\s+/g, '_');
+		properties[propertyName] = property;
 	});
 
 	return properties;

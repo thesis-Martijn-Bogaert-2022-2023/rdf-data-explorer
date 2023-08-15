@@ -51,7 +51,7 @@ main {
 }
 
 .input_row {
-	padding: 1rem;
+	padding: 0.5rem;
 	display: flex;
 	gap: 0.5rem;
 
@@ -66,8 +66,12 @@ main {
 		flex-grow: 1;
 	}
 
-	select {
-		max-width: 150px;
+	button {
+		display: inherit;
+
+		&:disabled {
+			display: none;
+		}
 	}
 }
 
