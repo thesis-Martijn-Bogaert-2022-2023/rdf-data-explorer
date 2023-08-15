@@ -38,7 +38,14 @@ document.getElementById('btn_start').addEventListener('click', function () {
 // NODE SELECTED
 networkEvents.on(
 	'nodeSelected',
-	(nodeId, nodeLabel, isResource, successingNodes) => {
+	(
+		nodeId,
+		nodeLabel,
+		isResource,
+		stringFilter,
+		languageFilter,
+		successingNodes
+	) => {
 		// Keep track of HTML elements to render in node information div
 		const htmlElements = [];
 
@@ -64,18 +71,21 @@ networkEvents.on(
 		htmlElements.push(`
 			<div class="input_row">
 				<label for="txt_filter_string">Filter (not required):</label>
-				<input type="text" id="txt_filter_string" list="lst_filter">
+				<input type="text" id="txt_filter_string" value="${
+					stringFilter ?? ''
+				}" list="lst_filter">
 				<datalist id="lst_filter">
 					<option value="${nodeLabel}">
 				</datalist>
 				<select id="slct_filter_lang">
+					<option value ${languageFilter ? 'selected' : ''}></option>
 					${languageList
 						.getLanguageCodes()
 						.map(
 							(code) =>
-								`<option value="${code}">${languageList.getLanguageName(
-									code
-								)}</option>`
+								`<option value="${code}" ${
+									languageFilter === code ? 'selected' : ''
+								}>${languageList.getLanguageName(code)}</option>`
 						)}
 				</select>
 				<button id="btn_add_query">Add to Query</button>

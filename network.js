@@ -101,6 +101,8 @@ export function initializeNetwork(startingResource) {
 			const nodeId = tapTarget.data('id');
 			const nodeLabel = tapTarget.data('label');
 			const isResource = tapTarget.data('isResource');
+			const stringFilter = tapTarget.data('stringFilter');
+			const languageFilter = tapTarget.data('languageFilter');
 
 			// Get IDs of node's successing nodes
 			const successingNodes = tapTarget.successors().nodes();
@@ -111,6 +113,8 @@ export function initializeNetwork(startingResource) {
 				nodeId,
 				nodeLabel,
 				isResource,
+				stringFilter,
+				languageFilter,
 				successingNodes
 			);
 		} else {
@@ -162,7 +166,5 @@ export function addNodeToQuery(nodeId, stringFilter, languageFilter) {
 export function removeNodeFromQuery(nodeId) {
 	const node = network.getElementById(nodeId);
 	node.data('addedToQuery', false);
-	node.removeData('stringFilter');
-	node.removeData('languageFilter');
-	console.log('Data removed', node.data());
+	console.log('Removed from query', node.data());
 }
