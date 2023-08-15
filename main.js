@@ -88,7 +88,9 @@ networkEvents.on(
 
 		// Add input row for filtering
 		htmlElements.push(`
-			<div class="input_row">
+			<div class="input_row" id="input_row_filter" ${
+				addedToQuery ? '' : `style="display:none;"`
+			}>
 				<label for="txt_filter_string">Filter (not required):</label>
 				<input type="text" id="txt_filter_string" value="${
 					stringFilter ?? ''
@@ -108,10 +110,10 @@ networkEvents.on(
 						)}
 				</select>
 				<select id="slct_optional">
-					<option value ${isOptional ? '' : 'selected'}>Required property</option>
+					<option value ${isOptional ? '' : 'selected'}>Required Property</option>
 					<option value="isOptional" ${
 						isOptional ? 'selected' : ''
-					}>Optional property</option>
+					}>Optional Property</option>
 				</select>
 				<button id="btn_filters_save">Save</button>
 			</div>
@@ -181,6 +183,11 @@ networkEvents.on(
 			// Enable and disable correct query buttons
 			btnAddQuery.disabled = true;
 			btnRemoveQuery.disabled = false;
+
+			// Show filters row
+			document
+				.getElementById('input_row_filter')
+				.style.removeProperty('display');
 		});
 
 		// REMOVE FROM QUERY BUTTON PRESSED
@@ -190,6 +197,9 @@ networkEvents.on(
 			// Enable and disable correct query buttons
 			btnAddQuery.disabled = false;
 			btnRemoveQuery.disabled = true;
+
+			// Hide filters row
+			document.getElementById('input_row_filter').style.display = 'none';
 		});
 
 		// SAVE FILTERS BUTTON PRESSSED
