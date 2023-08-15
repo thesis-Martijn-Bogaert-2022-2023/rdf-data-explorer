@@ -48,6 +48,7 @@ networkEvents.on(
 		addedToQuery,
 		propertyName,
 		isOptional,
+		isRoot,
 		successingNodes
 	) => {
 		// Keep track of HTML elements to render in node information div
@@ -72,52 +73,54 @@ networkEvents.on(
 			`);
 		}
 
-		// Add input row for adding to query
-		htmlElements.push(`
-			<div class="input_row">
-				<label for="txt_property">Property Name:</label>
-				<input type="text" id="txt_property" value="${propertyName ?? ''}">
-				<button ${
-					addedToQuery ? 'disabled' : ''
-				} id="btn_add_query">Add to Query</button>
-				<button ${
-					addedToQuery ? '' : 'disabled'
-				} id="btn_remove_query">Remove from Query</button>
-			</div>
-		`);
+		if (!isRoot) {
+			// Add input row for adding to query
+			htmlElements.push(`
+				<div class="input_row">
+					<label for="txt_property">Property Name:</label>
+					<input type="text" id="txt_property" value="${propertyName ?? ''}">
+					<button ${
+						addedToQuery ? 'disabled' : ''
+					} id="btn_add_query">Add to Query</button>
+					<button ${
+						addedToQuery ? '' : 'disabled'
+					} id="btn_remove_query">Remove from Query</button>
+				</div>
+			`);
 
-		// Add input row for filtering
-		htmlElements.push(`
-			<div class="input_row" id="input_row_filter" ${
-				addedToQuery ? '' : `style="display:none;"`
-			}>
-				<label for="txt_filter_string">Filter (not required):</label>
-				<input type="text" id="txt_filter_string" value="${
-					stringFilter ?? ''
-				}" list="lst_filter">
-				<datalist id="lst_filter">
-					<option value="${nodeLabel}">
-				</datalist>
-				<select id="slct_filter_lang">
-					<option value ${languageFilter ? 'selected' : ''}>Any Language</option>
-					${languageList
-						.getLanguageCodes()
-						.map(
-							(code) =>
-								`<option value="${code}" ${
-									languageFilter === code ? 'selected' : ''
-								}>${languageList.getLanguageName(code)}</option>`
-						)}
-				</select>
-				<select id="slct_optional">
-					<option value ${isOptional ? '' : 'selected'}>Required Property</option>
-					<option value="isOptional" ${
-						isOptional ? 'selected' : ''
-					}>Optional Property</option>
-				</select>
-				<button id="btn_filters_save">Save</button>
-			</div>
-		`);
+			// Add input row for filtering
+			htmlElements.push(`
+				<div class="input_row" id="input_row_filter" ${
+					addedToQuery ? '' : `style="display:none;"`
+				}>
+					<label for="txt_filter_string">Filter (not required):</label>
+					<input type="text" id="txt_filter_string" value="${
+						stringFilter ?? ''
+					}" list="lst_filter">
+					<datalist id="lst_filter">
+						<option value="${nodeLabel}">
+					</datalist>
+					<select id="slct_filter_lang">
+						<option value ${languageFilter ? 'selected' : ''}>Any Language</option>
+						${languageList
+							.getLanguageCodes()
+							.map(
+								(code) =>
+									`<option value="${code}" ${
+										languageFilter === code ? 'selected' : ''
+									}>${languageList.getLanguageName(code)}</option>`
+							)}
+					</select>
+					<select id="slct_optional">
+						<option value ${isOptional ? '' : 'selected'}>Required Property</option>
+						<option value="isOptional" ${
+							isOptional ? 'selected' : ''
+						}>Optional Property</option>
+					</select>
+					<button id="btn_filters_save">Save</button>
+				</div>
+			`);
+		}
 
 		// Set div's inner HTML
 		nodeInfoDiv.innerHTML = htmlElements.join('\n');
@@ -163,57 +166,60 @@ networkEvents.on(
 				});
 		}
 
-		// Get add and remove query buttons
-		const btnAddQuery = document.getElementById('btn_add_query');
-		const btnRemoveQuery = document.getElementById('btn_remove_query');
+		if (!isRoot) {
+			// Get add and remove query buttons
+			const btnAddQuery = document.getElementById('btn_add_query');
+			const btnRemoveQuery = document.getElementById('btn_remove_query');
 
-		// ADD TO QUERY BUTTON PRESSED
-		btnAddQuery.addEventListener('click', function () {
-			// Get entered property name
-			const propertyName = document.getElementById('txt_property').value;
+			// ADD TO QUERY BUTTON PRESSED
+			btnAddQuery.addEventListener('click', function () {
+				// Get entered property name
+				const propertyName = document.getElementById('txt_property').value;
 
-			// Make sure property name is given
-			if (!propertyName) {
-				alert('Enter a property name!');
-				return;
-			}
+				// Make sure property name is given
+				if (!propertyName) {
+					alert('Enter a property name!');
+					return;
+				}
 
-			toggleNodeAddedToQuery(nodeId, propertyName);
+				toggleNodeAddedToQuery(nodeId, propertyName);
 
-			// Enable and disable correct query buttons
-			btnAddQuery.disabled = true;
-			btnRemoveQuery.disabled = false;
+				// Enable and disable correct query buttons
+				btnAddQuery.disabled = true;
+				btnRemoveQuery.disabled = false;
 
-			// Show filters row
-			document
-				.getElementById('input_row_filter')
-				.style.removeProperty('display');
-		});
-
-		// REMOVE FROM QUERY BUTTON PRESSED
-		btnRemoveQuery.addEventListener('click', function () {
-			toggleNodeAddedToQuery(nodeId);
-
-			// Enable and disable correct query buttons
-			btnAddQuery.disabled = false;
-			btnRemoveQuery.disabled = true;
-
-			// Hide filters row
-			document.getElementById('input_row_filter').style.display = 'none';
-		});
-
-		// SAVE FILTERS BUTTON PRESSSED
-		document
-			.getElementById('btn_filters_save')
-			.addEventListener('click', function () {
-				const stringFilter = document.getElementById('txt_filter_string').value;
-				const languageFilter =
-					document.getElementById('slct_filter_lang').value;
-				const isOptional = Boolean(
-					document.getElementById('slct_optional').value
-				);
-				addFilters(nodeId, stringFilter, languageFilter, isOptional);
+				// Show filters row
+				document
+					.getElementById('input_row_filter')
+					.style.removeProperty('display');
 			});
+
+			// REMOVE FROM QUERY BUTTON PRESSED
+			btnRemoveQuery.addEventListener('click', function () {
+				toggleNodeAddedToQuery(nodeId);
+
+				// Enable and disable correct query buttons
+				btnAddQuery.disabled = false;
+				btnRemoveQuery.disabled = true;
+
+				// Hide filters row
+				document.getElementById('input_row_filter').style.display = 'none';
+			});
+
+			// SAVE FILTERS BUTTON PRESSSED
+			document
+				.getElementById('btn_filters_save')
+				.addEventListener('click', function () {
+					const stringFilter =
+						document.getElementById('txt_filter_string').value;
+					const languageFilter =
+						document.getElementById('slct_filter_lang').value;
+					const isOptional = Boolean(
+						document.getElementById('slct_optional').value
+					);
+					addFilters(nodeId, stringFilter, languageFilter, isOptional);
+				});
+		}
 
 		// Show div displaying node info
 		nodeInfoDiv.style.display = 'block';

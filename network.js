@@ -40,6 +40,7 @@ export function initializeNetwork(startingResource) {
 			id: idCounter++,
 			label: startingResource,
 			isResource: true,
+			isRoot: true,
 		},
 	};
 
@@ -109,6 +110,7 @@ export function initializeNetwork(startingResource) {
 			const addedToQuery = tapTarget.data('addedToQuery');
 			const propertyName = tapTarget.data('propertyName');
 			const isOptional = tapTarget.data('isOptional');
+			const isRoot = tapTarget.data('isRoot');
 
 			// Get IDs of node's successing nodes
 			const successingNodes = tapTarget.successors().nodes();
@@ -124,6 +126,7 @@ export function initializeNetwork(startingResource) {
 				addedToQuery,
 				propertyName,
 				isOptional,
+				isRoot,
 				successingNodes
 			);
 		} else {
