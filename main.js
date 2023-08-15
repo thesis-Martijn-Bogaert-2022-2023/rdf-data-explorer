@@ -2,6 +2,7 @@ import './style.scss';
 import {
 	addNodeToQuery,
 	addPredicateAndObjectToNetwork,
+	getPropertiesWithPredicateSequences,
 	initializeNetwork,
 	removeNodeFromQuery,
 	removeNodesAndEdges,
@@ -162,4 +163,9 @@ networkEvents.on(
 // NODE UNSELECTED
 networkEvents.on('nodeUnselected', () => {
 	nodeInfoDiv.style.display = 'none';
+});
+
+// GENERATE QUERY BUTTON PRESSED
+document.getElementById('btn_query').addEventListener('click', function () {
+	console.log(getPropertiesWithPredicateSequences());
 });

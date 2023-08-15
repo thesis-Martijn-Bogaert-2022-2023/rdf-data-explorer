@@ -133,6 +133,8 @@ export function addPredicateAndObjectToNetwork(
 	object,
 	objectIsResource
 ) {
+	if (!network) return;
+
 	const newNode = {
 		group: 'nodes',
 		data: { id: idCounter++, label: object, isResource: objectIsResource },
@@ -151,14 +153,20 @@ export function addPredicateAndObjectToNetwork(
 }
 
 export function renderNetwork() {
+	if (!network) return;
+
 	network.layout(layoutOptions).run();
 }
 
 export function removeNodesAndEdges(nodes) {
+	if (!network) return;
+
 	network.remove(nodes);
 }
 
 export function addNodeToQuery(nodeId, stringFilter, languageFilter) {
+	if (!network) return;
+
 	const node = network.getElementById(nodeId);
 	node.data('addedToQuery', true);
 	node.data('stringFilter', stringFilter);
@@ -166,6 +174,63 @@ export function addNodeToQuery(nodeId, stringFilter, languageFilter) {
 }
 
 export function removeNodeFromQuery(nodeId) {
+	if (!network) return;
+
 	const node = network.getElementById(nodeId);
 	node.data('addedToQuery', false);
+}
+
+export function getPropertiesWithPredicateSequences() {
+	if (!network) return;
+
+	const properties = {};
+
+	// Fetch nodes that are selected to add to query
+	const selectedNodes = network
+		.nodes()
+		.filter((node) => node.data('addedToQuery'));
+
+	// Each selected node represents a property to query for
+	selectedNodes.forEach((selectedNode) => {
+		// Each property can be fetched through a sequence of query statements
+		const statements = [];
+
+		// Get selected node's preceding edges
+		const predecessorEdges = selectedNode.predecessors().edges();
+
+		// Loop over preceding edges backwards
+		predecessorEdges.findLast((edge) => {
+			// A statement is defined by a predicate
+			const statement = {};
+			statement['predicate'] = edge.data('label');
+			statements.push(statement);
+		});
+
+		// Add statements info to property info
+		const property = {};
+		property['statements'] = statements;
+
+		// Add filters info to property info (if available)
+		const stringFilter = selectedNode.data('stringFilter');
+		const languageFilter = selectedNode.data('languageFilter');
+		if (stringFilter || languageFilter) {
+			const filters = {};
+
+			// Specify string filter (if available)
+			if (stringFilter) {
+				filters['string'] = selectedNode.data('stringFilter');
+			}
+
+			// Specify language filter (if available)
+			if (languageFilter) {
+				filters['language'] = selectedNode.data('languageFilter');
+			}
+
+			property['filters'] = filters;
+		}
+
+		properties[selectedNode.data('label')] = property;
+	});
+
+	return properties;
 }
