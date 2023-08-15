@@ -73,6 +73,10 @@ main {
 			display: none;
 		}
 	}
+
+	select {
+		max-width: 170px;
+	}
 }
 
 input,

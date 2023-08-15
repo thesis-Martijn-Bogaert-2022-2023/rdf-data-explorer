@@ -47,6 +47,7 @@ networkEvents.on(
 		languageFilter,
 		addedToQuery,
 		propertyName,
+		isOptional,
 		successingNodes
 	) => {
 		// Keep track of HTML elements to render in node information div
@@ -95,7 +96,7 @@ networkEvents.on(
 				<datalist id="lst_filter">
 					<option value="${nodeLabel}">
 				</datalist>
-				<select id="slct_filter_lang" placeholder="Language">
+				<select id="slct_filter_lang">
 					<option value ${languageFilter ? 'selected' : ''}>Any Language</option>
 					${languageList
 						.getLanguageCodes()
@@ -105,6 +106,12 @@ networkEvents.on(
 									languageFilter === code ? 'selected' : ''
 								}>${languageList.getLanguageName(code)}</option>`
 						)}
+				</select>
+				<select id="slct_optional">
+					<option value ${isOptional ? '' : 'selected'}>Required property</option>
+					<option value="isOptional" ${
+						isOptional ? 'selected' : ''
+					}>Optional property</option>
 				</select>
 				<button id="btn_filters_save">Save</button>
 			</div>
@@ -192,7 +199,10 @@ networkEvents.on(
 				const stringFilter = document.getElementById('txt_filter_string').value;
 				const languageFilter =
 					document.getElementById('slct_filter_lang').value;
-				addFilters(nodeId, stringFilter, languageFilter);
+				const isOptional = Boolean(
+					document.getElementById('slct_optional').value
+				);
+				addFilters(nodeId, stringFilter, languageFilter, isOptional);
 			});
 
 		// Show div displaying node info

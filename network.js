@@ -108,6 +108,7 @@ export function initializeNetwork(startingResource) {
 			const languageFilter = tapTarget.data('languageFilter');
 			const addedToQuery = tapTarget.data('addedToQuery');
 			const propertyName = tapTarget.data('propertyName');
+			const isOptional = tapTarget.data('isOptional');
 
 			// Get IDs of node's successing nodes
 			const successingNodes = tapTarget.successors().nodes();
@@ -122,6 +123,7 @@ export function initializeNetwork(startingResource) {
 				languageFilter,
 				addedToQuery,
 				propertyName,
+				isOptional,
 				successingNodes
 			);
 		} else {
@@ -241,6 +243,10 @@ export function getPropertiesWithPredicateSequences() {
 
 			property['filters'] = filters;
 		}
+
+		// Add optional property
+		const isOptional = selectedNode.data('isOptional');
+		if (isOptional) property['optional'] = true;
 
 		// Use property name as key (make sure key is valid)
 		let propertyName = selectedNode.data('propertyName');
