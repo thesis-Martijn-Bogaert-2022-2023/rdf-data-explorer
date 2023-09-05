@@ -4,11 +4,11 @@
 1. Navigate to the repository's root directory.
 2. If you run the app for the first time, run the following command:
 ```bash
-npm install
+yarn install
 ```
-3. Run the following command:
+3. To start the application (on port 8001), run:
 ```bash
-npm run dev
+yarn run dev --port 8001
 ```
 
 ## How to use
