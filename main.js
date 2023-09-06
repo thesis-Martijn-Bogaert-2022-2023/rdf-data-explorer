@@ -140,10 +140,12 @@ networkEvents.on(
 					predeterminedDatasources.add(datasource);
 
 					// Fetch predicates and object of node's resource
+					document.getElementById('btn_expand').textContent = 'Loading ...';
 					const results = await fetchPredicatesAndObjects(
 						nodeLabel,
 						datasource
 					);
+					document.getElementById('btn_expand').textContent = 'Expand';
 
 					// Remove node's successors (nodes and edges) in case they already existed
 					if (successingNodes.length > 0) {
