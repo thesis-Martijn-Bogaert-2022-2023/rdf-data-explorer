@@ -17,7 +17,6 @@
     "@comunica/query-sparql": "^2.8.2",
     "cytoscape": "^3.26.0",
     "cytoscape-dagre": "^2.5.0",
-    "language-list": "^0.0.3",
     "validate-iri": "^1.0.1"
   }
 }

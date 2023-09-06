@@ -13,13 +13,10 @@ import { fetchPredicatesAndObjects } from './querying';
 import { iriIsValid } from './validation';
 import { networkEvents } from './network';
 import { predeterminedDatasources } from './datasources';
-import LanguageList from 'language-list';
+import { languages } from './language-names-codes';
 
 // Get div to display tapped node information
 const nodeInfoDiv = document.getElementById('node_info');
-
-// Instantiate factory for language names
-const languageList = new LanguageList();
 
 // START BUTTON PRESSED
 document.getElementById('btn_start').addEventListener('click', function () {
@@ -106,14 +103,12 @@ networkEvents.on(
 					</datalist>
 					<select id="slct_filter_lang">
 						<option value ${languageFilter ? 'selected' : ''}>Any Language</option>
-						${languageList
-							.getLanguageCodes()
-							.map(
-								(code) =>
-									`<option value="${code}" ${
-										languageFilter === code ? 'selected' : ''
-									}>${languageList.getLanguageName(code)}</option>`
-							)}
+						${Object.entries(languages).map(
+							([languageName, languageCode]) =>
+								`<option value="${languageCode}" ${
+									languageFilter === languageCode ? 'selected' : ''
+								}>${languageName}</option>`
+						)}
 					</select>
 					<select id="slct_optional">
 						<option value ${isOptional ? '' : 'selected'}>Required Property</option>
