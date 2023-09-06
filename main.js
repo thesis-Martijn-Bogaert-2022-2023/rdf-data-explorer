@@ -239,5 +239,9 @@ networkEvents.on('nodeUnselected', () => {
 
 // GENERATE QUERY BUTTON PRESSED
 document.getElementById('btn_query').addEventListener('click', function () {
+	const limit = document.getElementById('txt_limit').value;
+	console.log(limit);
+	const offset = document.getElementById('txt_offset').value;
+	console.log(offset);
 	console.log(getPropertiesWithPredicateSequences());
 });

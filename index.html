@@ -18,10 +18,16 @@
           value="https://stad.gent/id/mensgemaaktobject/stam/550022369/2023-02-18T08:01:02.563Z">
         <button id="btn_start">Start</button>
       </div>
+      <div class="input_row">
+        <label for="txt_limit">Limit:</label>
+        <input type="number" id="txt_limit">
+        <label for="txt_offset">Offset:</label>
+        <input type="number" id="txt_offset">
+        <button id="btn_query">Generate Query</button>
+      </div>
       <div id="network"></div>
     </main>
     <aside>
-      <button id="btn_query">Generate Query</button>
       <div id="node_info" style="display: none;"></div>
     </aside>
     <script type="module" src="/main.js"></script>
