@@ -15,6 +15,7 @@ import { networkEvents } from './network';
 import { predeterminedDatasources } from './datasources';
 import { languages } from './language-names-codes';
 import { modifyUri } from './uri-modification';
+import { buildQuery } from 'sparql-query-builder';
 
 // Get div to display tapped node information
 const nodeInfoDiv = document.getElementById('node_info');
@@ -239,9 +240,16 @@ networkEvents.on('nodeUnselected', () => {
 
 // GENERATE QUERY BUTTON PRESSED
 document.getElementById('btn_query').addEventListener('click', function () {
+	const properties = getPropertiesWithPredicateSequences();
+	if (!properties) return;
 	const limit = document.getElementById('txt_limit').value;
-	console.log(limit);
 	const offset = document.getElementById('txt_offset').value;
-	console.log(offset);
-	console.log(getPropertiesWithPredicateSequences());
+	const query = buildQuery(
+		properties,
+		undefined,
+		undefined,
+		limit && limit > 0 ? limit : undefined,
+		offset && offset > 0 ? offset : undefined
+	);
+	console.log(query);
 });

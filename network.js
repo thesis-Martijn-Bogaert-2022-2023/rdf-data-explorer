@@ -222,7 +222,7 @@ export function getPropertiesWithPredicateSequences() {
 		predecessorEdges.findLast((edge) => {
 			// A statement is defined by a predicate
 			const statement = {};
-			statement['predicate'] = edge.data('label');
+			statement['predicate'] = `<${edge.data('label')}>`;
 			statements.push(statement);
 		});
 
