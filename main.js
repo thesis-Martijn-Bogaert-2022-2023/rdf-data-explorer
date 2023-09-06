@@ -251,5 +251,5 @@ document.getElementById('btn_query').addEventListener('click', function () {
 		limit && limit > 0 ? limit : undefined,
 		offset && offset > 0 ? offset : undefined
 	);
-	console.log(query);
+	alert(query);
 });
