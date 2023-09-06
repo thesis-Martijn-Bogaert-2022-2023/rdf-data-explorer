@@ -14,6 +14,7 @@ import { iriIsValid } from './validation';
 import { networkEvents } from './network';
 import { predeterminedDatasources } from './datasources';
 import { languages } from './language-names-codes';
+import { modifyUri } from './uri-modification';
 
 // Get div to display tapped node information
 const nodeInfoDiv = document.getElementById('node_info');
@@ -65,7 +66,7 @@ networkEvents.on(
 						datasource ?? ''
 					}" list="lst_datasource">
 					<datalist id="lst_datasource">
-						${[...predeterminedDatasources, nodeLabel]
+						${[...predeterminedDatasources, ...modifyUri(nodeLabel)]
 							.map((datasource) => `<option value="${datasource}">`)
 							.join('\n')}
 					</datalist>
@@ -135,9 +136,6 @@ networkEvents.on(
 						alert('Enter a valid datasource!');
 						return;
 					}
-
-					// Add datasource to predetermined datasources for future use
-					predeterminedDatasources.add(datasource);
 
 					// Fetch predicates and object of node's resource
 					document.getElementById('btn_expand').textContent = 'Loading ...';
