@@ -15,31 +15,17 @@ WHERE {
 export async function fetchPredicatesAndObjects(subjectResource, datasource) {
 	let predicatesAndObjects;
 
-	// TEMP: use local storage to not overload Stad Gent server
-	const saved = localStorage.getItem(subjectResource + datasource);
-	if (saved) {
-		console.log('Use local storage!');
-		predicatesAndObjects = JSON.parse(saved);
-	} else {
-		console.log('No local storage!');
-
-		const query = buildQuery(subjectResource);
-		const bindingsStream = await queryEngine.queryBindings(query, {
-			sources: [datasource],
-		});
-		const bindings = await bindingsStream.toArray();
-		predicatesAndObjects = bindings.map((binding) => {
-			const predicate = binding.get('p').value;
-			const object = binding.get('o').value;
-			const objectIsResource = binding.get('o').termType === 'NamedNode';
-			return { predicate, object, objectIsResource };
-		});
-
-		localStorage.setItem(
-			subjectResource + datasource,
-			JSON.stringify(predicatesAndObjects)
-		);
-	}
+	const query = buildQuery(subjectResource);
+	const bindingsStream = await queryEngine.queryBindings(query, {
+		sources: [datasource],
+	});
+	const bindings = await bindingsStream.toArray();
+	predicatesAndObjects = bindings.map((binding) => {
+		const predicate = binding.get('p').value;
+		const object = binding.get('o').value;
+		const objectIsResource = binding.get('o').termType === 'NamedNode';
+		return { predicate, object, objectIsResource };
+	});
 
 	return predicatesAndObjects;
 }
