@@ -16,16 +16,21 @@ export async function fetchPredicatesAndObjects(subjectResource, datasource) {
 	let predicatesAndObjects;
 
 	const query = buildQuery(subjectResource);
-	const bindingsStream = await queryEngine.queryBindings(query, {
-		sources: [datasource],
-	});
-	const bindings = await bindingsStream.toArray();
-	predicatesAndObjects = bindings.map((binding) => {
-		const predicate = binding.get('p').value;
-		const object = binding.get('o').value;
-		const objectIsResource = binding.get('o').termType === 'NamedNode';
-		return { predicate, object, objectIsResource };
-	});
+	try {
+		const bindingsStream = await queryEngine.queryBindings(query, {
+			sources: [datasource],
+		});
+		const bindings = await bindingsStream.toArray();
+		predicatesAndObjects = bindings.map((binding) => {
+			const predicate = binding.get('p').value;
+			const object = binding.get('o').value;
+			const objectIsResource = binding.get('o').termType === 'NamedNode';
+			return { predicate, object, objectIsResource };
+		});
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
 
 	return predicatesAndObjects;
 }

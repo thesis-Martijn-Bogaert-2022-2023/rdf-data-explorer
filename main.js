@@ -65,7 +65,7 @@ networkEvents.on(
 						datasource ?? ''
 					}" list="lst_datasource">
 					<datalist id="lst_datasource">
-						${[...predeterminedDatasources]
+						${[...predeterminedDatasources, nodeLabel]
 							.map((datasource) => `<option value="${datasource}">`)
 							.join('\n')}
 					</datalist>
@@ -141,10 +141,14 @@ networkEvents.on(
 
 					// Fetch predicates and object of node's resource
 					document.getElementById('btn_expand').textContent = 'Loading ...';
-					const results = await fetchPredicatesAndObjects(
-						nodeLabel,
-						datasource
-					);
+					let results = [];
+					try {
+						results = await fetchPredicatesAndObjects(nodeLabel, datasource);
+					} catch (error) {
+						document.getElementById('btn_expand').textContent =
+							'Error, try again';
+						return;
+					}
 					document.getElementById('btn_expand').textContent = 'Expand';
 
 					// Remove node's successors (nodes and edges) in case they already existed
